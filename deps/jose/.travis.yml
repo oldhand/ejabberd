@@ -1,0 +1,35 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+notifications:
+  email: false
+
+env:
+  - OTP_VERSION=19.3 ELIXIR_VERSION=1.4.2
+
+cache:
+  directories:
+    - docker-otp-19.3-elixir-1.4.2
+    - test/cavp_SUITE_data/186-3rsatestvectors
+    - test/cavp_SUITE_data/aesmmt
+    - test/cavp_SUITE_data/archive
+    - test/cavp_SUITE_data/gcmtestvectors
+    - test/cavp_SUITE_data/keccaktestvectors
+    - test/cavp_SUITE_data/kwtestvectors
+    - test/cavp_SUITE_data/pkcs-1v2-1-vec
+
+before_install:
+  -
+    if [ -e "docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION}/image.tar" ]; then
+      docker load -i "docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION}/image.tar";
+    else
+      docker build -t docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION} -f priv/Dockerfile --build-arg OTP_VERSION=${OTP_VERSION} --build-arg ELIXIR_VERSION=${ELIXIR_VERSION} priv;
+      mkdir -p "docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION}"; docker save -o "docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION}/image.tar" docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION};
+    fi
+
+script:
+  - docker run -v `pwd`:/build/jose docker-otp-${OTP_VERSION}-elixir-${ELIXIR_VERSION} sh -c 'cd jose && mix local.hex --force && mix local.rebar --force && mix deps.get && mix test && rm -rf _build deps ebin && make tests'

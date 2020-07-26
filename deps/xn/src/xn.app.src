@@ -1,0 +1,13 @@
+ {application, xn,
+ [{description,  "xn"},
+  {vsn,          "1.0.0"},
+  {modules,      []},
+  {registered,   []},
+  {applications, [kernel, stdlib]},
+  {mod,          {xn,[]}} 
+  ]}.
+
+%% Local Variables:
+%% mode: erlang
+%% End:
+%% vim: set filetype=erlang tabstop=8:

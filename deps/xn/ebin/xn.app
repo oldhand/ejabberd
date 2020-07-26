@@ -1,0 +1,9 @@
+{application,xn,
+             [{description,"xn"},
+              {vsn,"1.0.0"},
+              {modules,[rfc4627,xn,xn_application,xn_common,xn_content,
+                        xn_filter,xn_memcache,xn_modentitynum,xn_profile,
+                        xn_query,xn_rest]},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{xn,[]}}]}.
